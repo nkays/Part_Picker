@@ -1,0 +1,19 @@
+
+        
+          <tr>
+            <th scope="row">1</th>
+            <td height="50">
+                {% if instance.image %} 
+                <a href="{{ instance.get_absolute_url }}"><img class="card-img-top" height="50" src="{{ instance.image.url }}" alt="{{ instance.model }} logo"></a>
+                {% endif %} 
+            </td>
+            <td>{{ instance.brand }}</td>
+            <td>{{ instance.model }}</td>
+            <td>{{ instance.description|linebreaks|truncatewords:15 }}</td>
+            <td>{{instance.price}}</td>
+            <td>{% include 'products/snippets/update-cart.html' with product=instance cart=cart %}</td>
+          </tr>
+         
+        
+
+
