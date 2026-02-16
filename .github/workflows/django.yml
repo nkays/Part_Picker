@@ -29,6 +29,6 @@ jobs:
         run: uv sync --dev
 
       - name: Run tests
-        working-directory: partpicker
+        working-directory: src
         run: uv run python manage.py test
 
