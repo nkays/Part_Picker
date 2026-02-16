@@ -109,8 +109,9 @@ if DATABASE_URL:
         "postgresql://"
     ):
         DATABASES = {
-            "default": dj_database_url.config()
+            "default": dj_database_url.config(
                 default=DATABASE_URL,
+            )
         }
 
 # Password validation
