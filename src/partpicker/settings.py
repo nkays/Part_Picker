@@ -32,12 +32,13 @@ DEBUG = config("DJANGO_DEBUG", cast=bool, default =False)
 ALLOWED_HOSTS = [
     # "cncpartpicker.com",
     # "www.cncpartpicker.com",
-    ".railway.app"
-    "https://partpicker-production.up.railway.app/"
+    ".railway.app",
+    "https://partpicker-production.up.railway.app/",
 ]
 
 CSRF_TRUSTED_ORIGINS = [
-    "https://*.railway.app"
+    "https://*.railway.app",
+    "https://partpicker-production.up.railway.app/",
 ]
 
 
