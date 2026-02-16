@@ -9,3 +9,9 @@ from django.http import HttpResponse
 
 def index(request):
     return render(request, "Motors_ESCs/home.html")
+
+def hello_world(request):
+    return render(request, "hello-world.html", {})
+
+def healthz_view(request):
+    return HttpResponse("OK")
