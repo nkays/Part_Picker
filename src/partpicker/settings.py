@@ -51,13 +51,14 @@ if DEBUG:
 # Application definition
 
 INSTALLED_APPS = [
-    'Motors_ESCs.apps.MotorsEscsConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'commando',
+    'Motors_ESCs',
     
 ]
 
