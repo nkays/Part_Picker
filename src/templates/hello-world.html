@@ -1,13 +1,188 @@
-<!doctype html>
-<html>
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-  </head>
-  <body>
-    <h1 class="text-3xl font-bold underline">
-      {{ project_name}} Hello world!
-    </h1>
-  </body>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Platform Strategy Summary – Feedback Request</title>
+
+<style>
+body {
+    font-family: Arial, sans-serif;
+    margin: 40px;
+    background-color: #f4f6f8;
+    color: #1f2937;
+    line-height: 1.6;
+}
+
+h1, h2, h3 {
+    color: #111827;
+}
+
+.section {
+    background: white;
+    padding: 25px;
+    margin-bottom: 30px;
+    border-radius: 10px;
+    box-shadow: 0 6px 16px rgba(0,0,0,0.05);
+}
+
+ul {
+    margin-top: 10px;
+}
+
+.question {
+    background: #eef2ff;
+    padding: 15px;
+    border-left: 4px solid #4f46e5;
+    margin-top: 15px;
+}
+
+.highlight {
+    background: #fef3c7;
+    padding: 3px 6px;
+    border-radius: 4px;
+}
+</style>
+</head>
+<body>
+
+<h1>Platform Strategy Summary</h1>
+<p>This document summarizes recent strategic discussions regarding platform direction, branding, architecture, and positioning. Feedback is requested on overall alignment and decision clarity.</p>
+
+<div class="section">
+<h2>1. Current Strategic Shift</h2>
+<ul>
+<li>Original direction: CNCPartPicker platform</li>
+<li>Current pivot: Start with Voron sourcing page and Cinewhoop page</li>
+<li>Goal: Validate demand before building full infrastructure</li>
+<li>Focus: Ship something public-facing quickly</li>
+</ul>
+
+<div class="question">
+Should initial effort prioritize fast content validation or structured backend infrastructure?
+</div>
+</div>
+
+<div class="section">
+<h2>2. Vertical Strategy Concept</h2>
+<p>The platform could use a <span class="highlight">vertical model</span>:</p>
+
+<ul>
+<li>Voron = Vertical 1</li>
+<li>Cinewhoop = Vertical 2</li>
+<li>CNC = Vertical 3 (future)</li>
+<li>All share underlying structured parts + vendor models</li>
+</ul>
+
+<p>Vertical = Focused niche category inside a broader scalable hardware platform.</p>
+
+<div class="question">
+Is vertical-first expansion the correct long-term architecture model?
+</div>
+</div>
+
+<div class="section">
+<h2>3. Backend Architecture Proposal (Minimal v1)</h2>
+<ul>
+<li>PrinterModel</li>
+<li>Category</li>
+<li>Vendor</li>
+<li>Part (Many-to-many with printer models)</li>
+</ul>
+
+<p>Constraints:</p>
+<ul>
+<li>No authentication initially</li>
+<li>No complex permissions</li>
+<li>No premature SaaS infrastructure</li>
+<li>SEO-friendly template rendering</li>
+</ul>
+
+<div class="question">
+Is Django justified from day one, or should validation occur with static HTML first?
+</div>
+</div>
+
+<div class="section">
+<h2>4. Domain Strategy Debate</h2>
+<h3>Option A: Keep Existing Domain (e.g., BuzzardBuilds)</h3>
+<ul>
+<li>Flexible</li>
+<li>Personality-driven</li>
+<li>Mascot potential</li>
+<li>Expandable across verticals</li>
+</ul>
+
+<h3>Option B: Professional Platform Name</h3>
+<ul>
+<li>BuildForge</li>
+<li>SystemFoundry</li>
+<li>VectorFoundry</li>
+<li>AxisWorks</li>
+<li>ComponentAtlas</li>
+</ul>
+
+<h3>Option C: Biblical-Inspired Naming</h3>
+<ul>
+<li>Bezalel</li>
+<li>Cubit Labs</li>
+<li>Plumbline Systems</li>
+<li>Capstone Systems</li>
+<li>EbenWorks</li>
+</ul>
+
+<div class="question">
+Should branding begin personality-first and professionalize later, or start platform-serious immediately?
+</div>
+</div>
+
+<div class="section">
+<h2>5. Brand Layering Strategy</h2>
+
+<p>Proposed staged approach:</p>
+
+<ul>
+<li>Phase 1: Build under BuzzardBuilds (content + experimentation)</li>
+<li>Phase 2: If traction appears, spin out SaaS under more formal entity</li>
+<li>BuzzardBuilds becomes marketing/content funnel</li>
+</ul>
+
+<div class="question">
+Is layered branding (builder brand → SaaS entity) a strategically sound approach?
+</div>
+</div>
+
+<div class="section">
+<h2>6. Identity Direction Question</h2>
+
+<p>The deeper tension appears to be:</p>
+
+<ul>
+<li>Personal builder brand vs infrastructure company</li>
+<li>Content platform vs structured SaaS</li>
+<li>Validation-first vs architecture-first</li>
+</ul>
+
+<div class="question">
+Given early-stage uncertainty, what sequencing would minimize regret while maximizing optionality?
+</div>
+</div>
+
+<div class="section">
+<h2>7. Core Objectives</h2>
+
+<ul>
+<li>Ship consistently</li>
+<li>Develop real backend competence</li>
+<li>Validate niche hardware sourcing demand</li>
+<li>Keep long-term platform option alive</li>
+<li>Avoid overengineering</li>
+</ul>
+
+<div class="question">
+What would you recommend as the most rational 90-day strategy given these constraints?
+</div>
+</div>
+
+</body>
 </html>
