@@ -3,184 +3,186 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Platform Roadmap</title>
+<title>Platform Strategy Summary – Feedback Request</title>
 
 <style>
 body {
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-    background: #f3f4f6;
-    margin: 0;
-    padding: 40px;
+    font-family: Arial, sans-serif;
+    margin: 40px;
+    background-color: #f4f6f8;
+    color: #1f2937;
+    line-height: 1.6;
+}
+
+h1, h2, h3 {
     color: #111827;
 }
 
-.container {
-    max-width: 900px;
-    margin: auto;
-}
-
-h1 {
-    font-size: 32px;
-    margin-bottom: 10px;
-}
-
-.card {
+.section {
     background: white;
     padding: 25px;
-    border-radius: 12px;
-    margin-bottom: 25px;
-    box-shadow: 0 8px 20px rgba(0,0,0,0.05);
+    margin-bottom: 30px;
+    border-radius: 10px;
+    box-shadow: 0 6px 16px rgba(0,0,0,0.05);
 }
 
-.deadline {
-    font-weight: 600;
-    color: #dc2626;
+ul {
+    margin-top: 10px;
 }
 
-.progress-bar-container {
-    background: #e5e7eb;
-    border-radius: 20px;
-    height: 20px;
-    margin: 15px 0;
-    overflow: hidden;
-}
-
-.progress-bar {
-    height: 100%;
-    width: 0%;
-    background: linear-gradient(90deg, #2563eb, #3b82f6);
-    transition: width 0.3s ease;
-}
-
-details {
+.question {
+    background: #eef2ff;
+    padding: 15px;
+    border-left: 4px solid #4f46e5;
     margin-top: 15px;
 }
 
-summary {
-    font-weight: 600;
-    cursor: pointer;
-    margin-bottom: 10px;
-}
-
-.task {
-    margin-bottom: 8px;
-}
-
-.countdown {
-    font-size: 14px;
-    color: #6b7280;
+.highlight {
+    background: #fef3c7;
+    padding: 3px 6px;
+    border-radius: 4px;
 }
 </style>
 </head>
 <body>
 
-<div class="container">
+<h1>Platform Strategy Summary</h1>
+<p>This document summarizes recent strategic discussions regarding platform direction, branding, architecture, and positioning. Feedback is requested on overall alignment and decision clarity.</p>
 
-<h1>Platform Development Roadmap</h1>
-<p class="deadline">Milestones Due Sunday 2/22/2026</p>
-<p class="countdown" id="countdown"></p>
+<div class="section">
+<h2>1. Current Strategic Shift</h2>
+<ul>
+<li>Original direction: CNCPartPicker platform</li>
+<li>Current pivot: Start with Voron sourcing page and Cinewhoop page</li>
+<li>Goal: Validate demand before building full infrastructure</li>
+<li>Focus: Ship something public-facing quickly</li>
+</ul>
 
-<div class="progress-bar-container">
-    <div class="progress-bar" id="progressBar"></div>
+<div class="question">
+Should initial effort prioritize fast content validation or structured backend infrastructure?
+</div>
 </div>
 
-<div class="card">
-    <h2>This Week's Milestones</h2>
+<div class="section">
+<h2>2. Vertical Strategy Concept</h2>
+<p>The platform could use a <span class="highlight">vertical model</span>:</p>
 
-    <details open>
-        <summary>Django + Railway CFE Course</summary>
-        <div class="task"><input type="checkbox" class="checkbox"> Complete backend deployment lessons</div>
-        <div class="task"><input type="checkbox" class="checkbox"> Deploy Django app to Railway</div>
-        <div class="task"><input type="checkbox" class="checkbox"> Configure production database</div>
-        <div class="task"><input type="checkbox" class="checkbox"> Document deployment workflow</div>
-    </details>
+<ul>
+<li>Voron = Vertical 1</li>
+<li>Cinewhoop = Vertical 2</li>
+<li>CNC = Vertical 3 (future)</li>
+<li>All share underlying structured parts + vendor models</li>
+</ul>
 
-    <details>
-        <summary>Homepage UI Updates</summary>
-        <div class="task"><input type="checkbox" class="checkbox"> Add 2 dropdown menus</div>
-        <div class="task"><input type="checkbox" class="checkbox"> Ensure mobile responsiveness</div>
-        <div class="task"><input type="checkbox" class="checkbox"> Clean visual consistency</div>
-    </details>
+<p>Vertical = Focused niche category inside a broader scalable hardware platform.</p>
+
+<div class="question">
+Is vertical-first expansion the correct long-term architecture model?
+</div>
 </div>
 
-<div class="card">
-    <h2>Recommended Goals for Next Week</h2>
+<div class="section">
+<h2>3. Backend Architecture Proposal (Minimal v1)</h2>
+<ul>
+<li>PrinterModel</li>
+<li>Category</li>
+<li>Vendor</li>
+<li>Part (Many-to-many with printer models)</li>
+</ul>
 
-    <details>
-        <summary>Backend Strengthening</summary>
-        <div class="task"><input type="checkbox" class="checkbox"> Implement authentication (login/logout)</div>
-        <div class="task"><input type="checkbox" class="checkbox"> Add environment variable management</div>
-        <div class="task"><input type="checkbox" class="checkbox"> Basic permissions structure</div>
-    </details>
+<p>Constraints:</p>
+<ul>
+<li>No authentication initially</li>
+<li>No complex permissions</li>
+<li>No premature SaaS infrastructure</li>
+<li>SEO-friendly template rendering</li>
+</ul>
 
-    <details>
-        <summary>Frontend Professionalization</summary>
-        <div class="task"><input type="checkbox" class="checkbox"> Improve layout hierarchy</div>
-        <div class="task"><input type="checkbox" class="checkbox"> Add loading states</div>
-        <div class="task"><input type="checkbox" class="checkbox"> Form validation + UX polish</div>
-    </details>
-
-    <details>
-        <summary>Professional Development</summary>
-        <div class="task"><input type="checkbox" class="checkbox"> Review Django models deeply</div>
-        <div class="task"><input type="checkbox" class="checkbox"> Complete 1 GD&T drawing practice</div>
-        <div class="task"><input type="checkbox" class="checkbox"> Research contract roles with software licensing</div>
-    </details>
+<div class="question">
+Is Django justified from day one, or should validation occur with static HTML first?
+</div>
 </div>
 
+<div class="section">
+<h2>4. Domain Strategy Debate</h2>
+<h3>Option A: Keep Existing Domain (e.g., BuzzardBuilds)</h3>
+<ul>
+<li>Flexible</li>
+<li>Personality-driven</li>
+<li>Mascot potential</li>
+<li>Expandable across verticals</li>
+</ul>
+
+<h3>Option B: Professional Platform Name</h3>
+<ul>
+<li>BuildForge</li>
+<li>SystemFoundry</li>
+<li>VectorFoundry</li>
+<li>AxisWorks</li>
+<li>ComponentAtlas</li>
+</ul>
+
+<h3>Option C: Biblical-Inspired Naming</h3>
+<ul>
+<li>Bezalel</li>
+<li>Cubit Labs</li>
+<li>Plumbline Systems</li>
+<li>Capstone Systems</li>
+<li>EbenWorks</li>
+</ul>
+
+<div class="question">
+Should branding begin personality-first and professionalize later, or start platform-serious immediately?
+</div>
 </div>
 
-<script>
-// COUNTDOWN TIMER
-const deadline = new Date("February 22, 2026 23:59:59").getTime();
-const countdownElement = document.getElementById("countdown");
+<div class="section">
+<h2>5. Brand Layering Strategy</h2>
 
-function updateCountdown() {
-    const now = new Date().getTime();
-    const distance = deadline - now;
+<p>Proposed staged approach:</p>
 
-    if (distance < 0) {
-        countdownElement.innerHTML = "Deadline reached.";
-        return;
-    }
+<ul>
+<li>Phase 1: Build under BuzzardBuilds (content + experimentation)</li>
+<li>Phase 2: If traction appears, spin out SaaS under more formal entity</li>
+<li>BuzzardBuilds becomes marketing/content funnel</li>
+</ul>
 
-    const days = Math.floor(distance / (1000 * 60 * 60 * 24));
-    const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-    countdownElement.innerHTML = `${days} days, ${hours} hours remaining`;
-}
+<div class="question">
+Is layered branding (builder brand → SaaS entity) a strategically sound approach?
+</div>
+</div>
 
-setInterval(updateCountdown, 1000);
-updateCountdown();
+<div class="section">
+<h2>6. Identity Direction Question</h2>
 
-// PROGRESS TRACKING
-const checkboxes = document.querySelectorAll(".checkbox");
-const progressBar = document.getElementById("progressBar");
+<p>The deeper tension appears to be:</p>
 
-function updateProgress() {
-    let checked = 0;
-    checkboxes.forEach(cb => {
-        if (cb.checked) checked++;
-    });
-    const percent = (checked / checkboxes.length) * 100;
-    progressBar.style.width = percent + "%";
-    localStorage.setItem("milestoneState", JSON.stringify(
-        Array.from(checkboxes).map(cb => cb.checked)
-    ));
-}
+<ul>
+<li>Personal builder brand vs infrastructure company</li>
+<li>Content platform vs structured SaaS</li>
+<li>Validation-first vs architecture-first</li>
+</ul>
 
-// LOAD SAVED STATE
-window.onload = function() {
-    const saved = JSON.parse(localStorage.getItem("milestoneState"));
-    if (saved) {
-        checkboxes.forEach((cb, i) => cb.checked = saved[i]);
-    }
-    updateProgress();
-};
+<div class="question">
+Given early-stage uncertainty, what sequencing would minimize regret while maximizing optionality?
+</div>
+</div>
 
-checkboxes.forEach(cb => {
-    cb.addEventListener("change", updateProgress);
-});
-</script>
+<div class="section">
+<h2>7. Core Objectives</h2>
+
+<ul>
+<li>Ship consistently</li>
+<li>Develop real backend competence</li>
+<li>Validate niche hardware sourcing demand</li>
+<li>Keep long-term platform option alive</li>
+<li>Avoid overengineering</li>
+</ul>
+
+<div class="question">
+What would you recommend as the most rational 90-day strategy given these constraints?
+</div>
+</div>
 
 </body>
 </html>
