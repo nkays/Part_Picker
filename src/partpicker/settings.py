@@ -66,6 +66,8 @@ CSRF_TRUSTED_ORIGINS = [
     "https://partpicker-production.up.railway.app/",
 ]
 
+SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "HTTPS")
+
 
 if DEBUG:
     ALLOWED_HOSTS = ["*"]
