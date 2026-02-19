@@ -58,7 +58,7 @@ ALLOWED_HOSTS = [
     # "cncpartpicker.com",
     # "www.cncpartpicker.com",
     ".railway.app",
-    "https://partpicker-production.up.railway.app/",
+    "https://partpicker-production.up.railway.app/*",
 ]
 
 CSRF_TRUSTED_ORIGINS = [
