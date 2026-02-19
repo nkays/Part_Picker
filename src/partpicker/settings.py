@@ -187,12 +187,12 @@ STATIC_ROOT = BASE_DIR / "static_root"
 STATIC_ROOT.mkdir(exist_ok=True, parents=True)
 
 
-# retain a copy of static files here
-# like custom css
-# unlocked files that change during dev
-# STATICFILES_DIRS = [
-#     BASE_DIR / "staticfiles"
-# ]
+retain a copy of static files here
+like custom css
+unlocked files that change during dev
+STATICFILES_DIRS = [
+    BASE_DIR / "staticfiles"
+]
 
 STORAGES = {
     # ...
