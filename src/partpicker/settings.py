@@ -175,23 +175,22 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
 
-# STATIC_URL = '/static/'
+STATIC_URL = '/static/'
 
-# # send our static files here
-# # locked files that do not change during runtime
-# STATIC_ROOT = BASE_DIR / "static_root"
-# STATIC_ROOT.mkdir(exist_ok=True, parents=True)
+# send our static files here
+# locked files that do not change during runtime
+STATIC_ROOT = BASE_DIR / "static_root"
+STATIC_ROOT.mkdir(exist_ok=True, parents=True)
 
-# # retain a copy of static files here
-# # like custom css
-# # unlocked files tht change during runtime
+# retain a copy of static files here
+# like custom css
+# unlocked files tht change during runtime
 
-# STATICFILES_DIRS = [
-#     BASE_DIR / "staticfiles"
+STATICFILES_DIRS = [
+    BASE_DIR / "staticfiles"
 
-# ]
-STATIC_URL = "/static/"
-STATIC_ROOT = BASE_DIR / "staticfiles"
+]
+
 
 
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
