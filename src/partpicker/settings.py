@@ -87,13 +87,14 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    "whitenoise.middleware.WhiteNoiseMiddleware",
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    "whitenoise.middleware.WhiteNoiseMiddleware",
+    
 ]
 
 ROOT_URLCONF = 'partpicker.urls'
@@ -173,24 +174,32 @@ USE_TZ = True
 
 
 # Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/1.11/howto/static-files/
+# https://docs.djangoproject.com/en/dev/howto/static-files/
 
-STATIC_URL = '/static/'
+STATIC_URL = 'static/'
 
 # send our static files here
 # locked files that do not change during runtime
+# external static file server
 STATIC_ROOT = BASE_DIR / "static_root"
 STATIC_ROOT.mkdir(exist_ok=True, parents=True)
 
+
 # retain a copy of static files here
 # like custom css
-# unlocked files tht change during runtime
-
+# unlocked files that change during dev
 STATICFILES_DIRS = [
     BASE_DIR / "staticfiles"
-
 ]
 
+STORAGES = {
+    # ...
+    "staticfiles": {
+        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+    },
+}
 
+# Default primary key field type
+# https://docs.djangoproject.com/en/dev/ref/settings/#default-auto-field
 
-STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
