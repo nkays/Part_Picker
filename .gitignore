@@ -1,4 +1,5 @@
 src/static_root
+src/staticfiles
 
 .DS_Store
 
