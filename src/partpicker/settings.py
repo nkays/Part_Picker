@@ -58,15 +58,15 @@ ALLOWED_HOSTS = [
     # "cncpartpicker.com",
     # "www.cncpartpicker.com",
     ".railway.app",
-    "https://partpicker-production.up.railway.app/*",
+    "https://partpicker-production.up.railway.app",
 ]
 
 CSRF_TRUSTED_ORIGINS = [
+    "https://partpicker-production.up.railway.app",
     "https://*.railway.app",
-    "https://partpicker-production.up.railway.app/",
 ]
 
-SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "HTTPS")
+SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 
 
 if DEBUG:
