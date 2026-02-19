@@ -171,29 +171,46 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
 
 # send our static files here
 # locked files that do not change during runtime
 # external static file server
 STATIC_ROOT = BASE_DIR / "static_root"
-STATIC_ROOT.mkdir(exist_ok=True, parents=True)
+STATIC_ROOT.mkdir(parents=True, exist_ok=True)
 
-# retain a copy of static files here
-# like custom css
-# unlocked files that change during dev
+
+#retain a copy of static files here
+#like custom css
+#unlocked files that change during dev
 STATICFILES_DIRS = [
     BASE_DIR / "staticfiles"
 ]
 
 STORAGES = {
-    # ...
     "staticfiles": {
-        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+        "BACKEND": "whitenoise.storage.CompressedStaticFilesStorage",
     },
 }
+
+#WHITENOISE_MANIFEST_STRICT = False
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "handlers": {
+        "console": {
+            "class": "logging.StreamHandler",
+        },
+    },
+    "root": {
+        "handlers": ["console"],
+        "level": "DEBUG",
+    },
+}
