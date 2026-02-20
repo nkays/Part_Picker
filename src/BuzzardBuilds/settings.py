@@ -177,7 +177,7 @@ print(STATIC_URL)
 # send our static files here
 # locked files that do not change during runtime
 # external static file server
-STATIC_ROOT = BASE_DIR / "staticfiles/"
+STATIC_ROOT = Path(os.environ.get("STATIC_ROOT", BASE_DIR / "staticfiles"))
 STATIC_ROOT.mkdir(parents=True, exist_ok=True)
 
 
