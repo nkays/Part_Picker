@@ -189,7 +189,7 @@ STATICFILES_DIRS = [
 ]
 
 STORAGES = {
-    "staticfiles": {
+    "static/": {
         "BACKEND": "whitenoise.storage.CompressedStaticFilesStorage",
     },
 }
