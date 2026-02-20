@@ -177,7 +177,7 @@ print(STATIC_URL)
 # send our static files here
 # locked files that do not change during runtime
 # external static file server
-STATIC_ROOT = BASE_DIR / "static/"
+STATIC_ROOT = BASE_DIR / "staticfiles/"
 STATIC_ROOT.mkdir(parents=True, exist_ok=True)
 
 
@@ -185,10 +185,13 @@ STATIC_ROOT.mkdir(parents=True, exist_ok=True)
 #like custom css
 #unlocked files that change during dev
 STATICFILES_DIRS = [
-    BASE_DIR / "staticfiles"
+    BASE_DIR / "static"
 ]
 
 STORAGES = {
+    "default": {
+        "BACKEND": "django.core.files.storage.FileSystemStorage",
+    },
     "staticfiles": {
         "BACKEND": "whitenoise.storage.CompressedStaticFilesStorage",
     },

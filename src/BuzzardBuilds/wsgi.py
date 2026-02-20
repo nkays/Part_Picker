@@ -8,12 +8,12 @@ https://docs.djangoproject.com/en/5.2/howto/deployment/wsgi/
 """
 
 import os
-
+from django.conf import settings
 from django.core.wsgi import get_wsgi_application
 from whitenoise import WhiteNoise
-from django.conf import settings
+
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'BuzzardBuilds.settings')
 
 application = get_wsgi_application()
-application = WhiteNoise(application, root="static/", max_age=31536000)
+application = WhiteNoise(application, root=STATIC_ROOT, max_age=31536000)
