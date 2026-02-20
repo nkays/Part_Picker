@@ -1,26 +1,236 @@
-{% load static %}
-<!doctype html>
-<html>
-  <head>
-    {% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>The 500 Error That Wasn't a Bug: A Django + Railway Deployment Story</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; line-height: 1.7; margin: 40px; max-width: 900px; }
+        h1, h2, h3 { margin-top: 2em; }
+        code { background: #f4f4f4; padding: 4px 6px; border-radius: 4px; }
+        pre { background: #f4f4f4; padding: 16px; overflow-x: auto; border-radius: 6px; }
+        blockquote { border-left: 4px solid #ccc; padding-left: 12px; color: #555; font-style: italic; }
+        svg { margin: 20px 0; }
+    </style>
+</head>
+<body>
 
-        <!-- Core favicons – this is usually enough -->
-        <link rel="icon" href="{% static 'favicon.ico' %}" type="image/x-icon">
-        <link rel="icon" href="{% static 'favicon.svg' %}" type="image/svg+xml">
+<h1>The 500 Error That Wasn't a Bug</h1>
+<h3>A Django + Railway Deployment Story</h3>
 
-        <!-- iOS home screen -->
-        <link rel="apple-touch-icon" href="{% static 'apple-touch-icon.png' %}">
+<p>
+Everything was green. The deploy succeeded. The container booted. 
+Then I visited <code>/admin/</code>.
+</p>
 
-        <!-- Optional: if you add a manifest for PWA -->
-        <!-- <link rel="manifest" href="{% static 'manifest.json' %}"> -->
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-    <link rel="stylesheet" href="{% static 'app/custom.css' %}" />
-  </head>
-  <body>
-    <h1 class="text-3xl font-bold underline">
-      {{ project_name }} Project!
-    </h1>
-  </body>
+<p>
+500.
+</p>
+
+<p>
+The logs showed:
+</p>
+
+<pre>
+ValueError: Missing staticfiles manifest entry for 'admin/css/base.css'
+</pre>
+
+<p>
+Django wasn’t broken. Railway wasn’t broken. 
+My mental model was.
+</p>
+
+<hr>
+
+<h2>The Symptom</h2>
+
+<p>
+The app worked in development. Static files rendered perfectly.
+But in production, only pages that relied on admin static assets crashed.
+</p>
+
+<p>
+I was using:
+</p>
+
+<pre>
+whitenoise.storage.CompressedManifestStaticFilesStorage
+</pre>
+
+<p>
+Which is correct for production. So why was it failing?
+</p>
+
+<hr>
+
+<h2>The Mistake</h2>
+
+<p>
+I had blurred the line between two completely different phases of deployment:
+</p>
+
+<ul>
+    <li>Building the container</li>
+    <li>Running the container</li>
+</ul>
+
+<p>
+That separation matters more than it seems.
+</p>
+
+<hr>
+
+<h2>What I Thought Was Happening</h2>
+
+<svg width="800" height="160">
+  <rect x="50" y="50" width="200" height="60" fill="#e3f2fd" stroke="#2196f3"/>
+  <text x="80" y="85">Install Dependencies</text>
+
+  <rect x="300" y="50" width="200" height="60" fill="#fff3e0" stroke="#fb8c00"/>
+  <text x="330" y="85">Run Migrations</text>
+
+  <rect x="550" y="50" width="200" height="60" fill="#e8f5e9" stroke="#43a047"/>
+  <text x="580" y="85">Collect Static</text>
+
+  <line x1="250" y1="80" x2="300" y2="80" stroke="#000"/>
+  <line x1="500" y1="80" x2="550" y2="80" stroke="#000"/>
+</svg>
+
+<p>
+One linear pipeline. Everything runs. Everything works.
+</p>
+
+<p>
+But that’s not how containers work.
+</p>
+
+<hr>
+
+<h2>What Was Actually Happening</h2>
+
+<svg width="800" height="260">
+
+  <rect x="50" y="40" width="700" height="80" fill="#e3f2fd" stroke="#2196f3"/>
+  <text x="70" y="75" font-weight="bold">BUILD PHASE</text>
+  <text x="70" y="100">Install dependencies → collectstatic</text>
+
+  <rect x="50" y="150" width="700" height="80" fill="#fff3e0" stroke="#fb8c00"/>
+  <text x="70" y="185" font-weight="bold">RUNTIME PHASE</text>
+  <text x="70" y="210">Connect to DB → migrate → start Gunicorn</text>
+
+</svg>
+
+<p>
+Build phase has no database.
+Runtime phase should not rebuild assets.
+</p>
+
+<p>
+I had accidentally mixed concerns.
+</p>
+
+<hr>
+
+<h2>The Real Issue</h2>
+
+<p>
+<code>CompressedManifestStaticFilesStorage</code> is strict.
+</p>
+
+<p>
+It requires:
+</p>
+
+<ul>
+    <li>A generated manifest file</li>
+    <li>All static files present at build time</li>
+    <li>Admin CSS included in that manifest</li>
+</ul>
+
+<p>
+If <code>collectstatic</code> runs in the wrong environment, or before dependencies are fully installed,
+the manifest will be incomplete.
+</p>
+
+<p>
+And Django will crash instead of silently failing.
+</p>
+
+<hr>
+
+<h2>The Fix</h2>
+
+<h3>1. Build Phase (Railway Pre-Deploy)</h3>
+
+<pre>
+python manage.py collectstatic --noinput
+</pre>
+
+<h3>2. Runtime (Start Command)</h3>
+
+<pre>
+python manage.py migrate --noinput && \
+gunicorn partpicker.wsgi:application --bind 0.0.0.0:8080
+</pre>
+
+<h3>3. settings.py</h3>
+
+<pre>
+STORAGES = {
+    "default": {
+        "BACKEND": "django.core.files.storage.FileSystemStorage",
+    },
+    "staticfiles": {
+        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+    },
+}
+</pre>
+
+<hr>
+
+<h2>The Clean Architecture Model</h2>
+
+<svg width="800" height="200">
+
+  <rect x="100" y="60" width="250" height="80" fill="#e8f5e9" stroke="#43a047"/>
+  <text x="140" y="95">Immutable Container</text>
+  <text x="140" y="115">Static files baked in</text>
+
+  <rect x="450" y="60" width="250" height="80" fill="#fce4ec" stroke="#d81b60"/>
+  <text x="490" y="95">Live Database</text>
+  <text x="490" y="115">Schema updated at runtime</text>
+
+  <line x1="350" y1="100" x2="450" y2="100" stroke="#000"/>
+
+</svg>
+
+<p>
+Static assets belong inside the container.  
+Database state belongs outside of it.
+</p>
+
+<hr>
+
+<h2>What I Learned</h2>
+
+<blockquote>
+Build your container once.  
+Run migrations every time.  
+Never mix the two.
+</blockquote>
+
+<p>
+The 500 error wasn’t a bug.
+It was a boundary violation between build-time and runtime responsibilities.
+</p>
+
+<p>
+Once that separation was respected, everything worked exactly as designed.
+</p>
+
+<hr>
+
+<p><em>Debugged during deployment of a Django application to Railway using WhiteNoise and manifest storage.</em></p>
+
+</body>
 </html>
