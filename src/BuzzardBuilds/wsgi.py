@@ -16,4 +16,4 @@ from django.conf import settings
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'BuzzardBuilds.settings')
 
 application = get_wsgi_application()
-application = WhiteNoise(application, root="static_root", max_age=31536000)
+application = WhiteNoise(application, root="static/", max_age=31536000)
