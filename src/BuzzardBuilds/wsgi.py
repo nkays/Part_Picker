@@ -20,4 +20,4 @@ from pathlib import Path
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'BuzzardBuilds.settings')
 
 application = get_wsgi_application()
-application = WhiteNoise(application, root=settings.STATIC_ROOT, prefix=settings.STATIC_URL)
+application = WhiteNoise(application, root="/app/src/staticfiles", prefix=" /static/")

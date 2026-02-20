@@ -19,7 +19,7 @@ from pathlib import Path
 BASE_DIR = Path(__file__).resolve().parent.parent
 REPO_DIR = BASE_DIR.parent
 TEMPLATES_DIR = BASE_DIR / "templates"
-print(BASE_DIR, REPO_DIR, TEMPLATES_DIR)
+
 
 
 # Quick-start development settings - unsuitable for production
@@ -172,12 +172,12 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
 STATIC_URL = '/static/'
-print(STATIC_URL)
+
 
 # send our static files here
 # locked files that do not change during runtime
 # external static file server
-STATIC_ROOT = Path(os.environ.get("STATIC_ROOT", BASE_DIR / "staticfiles"))
+STATIC_ROOT = BASE_DIR / "staticfiles"
 STATIC_ROOT.mkdir(parents=True, exist_ok=True)
 
 
