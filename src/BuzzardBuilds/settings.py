@@ -43,18 +43,18 @@ PROJECT_NAME = config("PROJECT_NAME", default="Unset Project Name")
 # EMAIL_USE_SSL = config("EMAIL_USE_SSL", cast=bool, default=False)  # EUse MAIL_PORT 465 for SSL
 
 # via gmail
-DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
-SERVER_EMAIL = EMAIL_HOST_USER
-ADMIN_USER_NAME=config("ADMIN_USER_NAME", default="Admin user")
-ADMIN_USER_EMAIL=config("ADMIN_USER_EMAIL", default=None)
+# DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+# SERVER_EMAIL = EMAIL_HOST_USER
+# ADMIN_USER_NAME=config("ADMIN_USER_NAME", default="Admin user")
+# ADMIN_USER_EMAIL=config("ADMIN_USER_EMAIL", default=None)
 
-MANAGERS=[]
-ADMINS=[]
-if all([ADMIN_USER_NAME, ADMIN_USER_EMAIL]):
-    ADMINS +=[
-        (f'{ADMIN_USER_NAME}', f'{ADMIN_USER_EMAIL}')
-    ]
-    MANAGERS=ADMINS
+# MANAGERS=[]
+# ADMINS=[]
+# if all([ADMIN_USER_NAME, ADMIN_USER_EMAIL]):
+#     ADMINS +=[
+#         (f'{ADMIN_USER_NAME}', f'{ADMIN_USER_EMAIL}')
+#     ]
+#     MANAGERS=ADMINS
 
 ALLOWED_HOSTS = [
     #...
