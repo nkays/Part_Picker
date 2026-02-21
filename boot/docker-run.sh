@@ -12,7 +12,6 @@ uv run python manage.py auto_admin
 RUNTIME_PORT=${PORT:-8080}
 RUNTIME_HOST=${HOST:-0.0.0.0}
 # Start Gunicorn
-echo "Starting Gunicorn on $RUNTIME_HOST:$RUNTIME_PORT"
 
 # Start Gunicorn WITHOUT uv run
 exec gunicorn BuzzardBuilds.wsgi:application --bind $RUNTIME_HOST:$RUNTIME_PORT --workers 3 --log-level info
