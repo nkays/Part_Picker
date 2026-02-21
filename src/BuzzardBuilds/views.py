@@ -5,8 +5,14 @@ from django.shortcuts import render
 
 PROJECT_NAME = getattr(settings, "PROJECT_NAME", "Unset Project in Views")
 
-def home_view(request):
-    return render(request, "pages/home.html", {})
+def home_page(request, *args, **kwargs):
+    title = "Welcome"
+    context = {
+        "title": title
+    }
+    # parag = "{title} Justin!".format(**context)
+    return render(request, "pages/home.html", context)
+
 
 def Blog1(request):
     return render(request, "Blog1.html", {
