@@ -80,6 +80,14 @@ RAILWAY_HOSTS = [
     ".up.railway.app",
     "partpicker.railway.internal",
 ]
+
+for host in RAILWAY_HOSTS:
+    ALLOWED_HOSTS.append(host)
+    for protocol in ["http","https"]:
+        if host.startswith("."):
+            CSRF_TRUSTED_ORIGINS.append(f"{protocol}://*{host}")
+        else:
+            CSRF_TRUSTED_ORIGINS.append(f"{protocol}://{host}")
 # Application definition
 
 INSTALLED_APPS = [
