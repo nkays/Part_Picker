@@ -36,12 +36,12 @@ RUN uv sync --frozen --no-dev
 # Copy project code
 COPY ./src /code
 
+# Collect static files
+RUN uv run python manage.py collectstatic --noinput
+
 # Copy entrypoint script
 COPY ./boot/docker-run.sh /opt/docker-run.sh
 RUN chmod +x /opt/docker-run.sh
-
-# Collect static files
-RUN uv run python manage.py collectstatic --noinput
 
 # Clean up apt cache
 RUN apt-get remove --purge -y \

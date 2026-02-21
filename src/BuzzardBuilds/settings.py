@@ -33,7 +33,7 @@ DEBUG = config("DJANGO_DEBUG", cast=bool, default =False)
 
 PROJECT_NAME = config("PROJECT_NAME", default="Unset Project Name")
 
-default backend
+#default backend
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = config("EMAIL_HOST", cast=str, default=None)
 EMAIL_PORT = config("EMAIL_PORT", cast=str, default='587') # Recommended
