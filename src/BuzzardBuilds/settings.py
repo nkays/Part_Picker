@@ -198,12 +198,12 @@ STATIC_ROOT = BASE_DIR / "staticfiles"
 STATIC_ROOT.mkdir(parents=True, exist_ok=True)
 
 
-#retain a copy of static files here
-#like custom css
-#unlocked files that change during dev
-# STATICFILES_DIRS = [
-#     BASE_DIR / "static"
-# ]
+# retain a copy of static files here
+# like custom css
+# unlocked files that change during dev
+STATICFILES_DIRS = [
+    BASE_DIR / "staticfiles"
+]
 
 STORAGES = {
     "default": {
