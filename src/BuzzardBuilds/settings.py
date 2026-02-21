@@ -60,12 +60,13 @@ ALLOWED_HOSTS = [
     #...
     "partpicker-production.up.railway.app",
     "www.buzzardbuilds.com",
-    "buzzardbuilds.com",
+    ".buzzardbuilds.com",
         #...
 ]
 
 CSRF_TRUSTED_ORIGINS = [
     "https://partpicker-production.up.railway.app",
+    "https://*.buzzardbuilds.com"
 ]
 
 SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
