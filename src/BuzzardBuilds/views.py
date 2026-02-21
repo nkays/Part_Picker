@@ -5,6 +5,9 @@ from django.shortcuts import render
 
 PROJECT_NAME = getattr(settings, "PROJECT_NAME", "Unset Project in Views")
 
+def home_view(request):
+    return render(request, "pages/home.html", [])
+
 def Blog1(request):
     return render(request, "Blog1.html", {
         "project_name": PROJECT_NAME
