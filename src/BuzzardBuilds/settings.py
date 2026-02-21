@@ -68,6 +68,9 @@ CSRF_TRUSTED_ORIGINS = [
     "https://partpicker-production.up.railway.app",
     "https://*.buzzardbuilds.com"
 ]
+# HTTPS
+CSRF_COOKIE_SECURE=not DEBUG
+SESSION_COOKIE_SECURE=not DEBUG
 
 SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 
