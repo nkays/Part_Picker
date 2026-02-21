@@ -3,15 +3,12 @@ set -e
 
 cd /code
 
-# Run startup management commands
-# uv run python manage.py sendtestemail --admins
 uv run python manage.py migrate
-# uv run python manage.py auto_admin
 
-# Default port (Railway overrides this with PORT env var)
 RUNTIME_PORT=${PORT:-8080}
-RUNTIME_HOST=${HOST:-0.0.0.0}
-# Start Gunicorn
+RUNTIME_HOST=0.0.0.0
 
-# Start Gunicorn WITHOUT uv run
-exec gunicorn BuzzardBuilds.wsgi:application --bind $RUNTIME_HOST:$RUNTIME_PORT --workers 3 --log-level info
+exec uv run gunicorn BuzzardBuilds.wsgi:application \
+    --bind ${RUNTIME_HOST}:${RUNTIME_PORT} \
+    --workers 3 \
+    --log-level info
