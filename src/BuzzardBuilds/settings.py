@@ -59,7 +59,9 @@ PROJECT_NAME = config("PROJECT_NAME", default="Unset Project Name")
 ALLOWED_HOSTS = [
     #...
     "partpicker-production.up.railway.app",
-    #...
+    "www.buzzardbuilds.com",
+    "buzzardbuilds.com",
+        #...
 ]
 
 CSRF_TRUSTED_ORIGINS = [
