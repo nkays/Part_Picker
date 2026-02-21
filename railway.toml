@@ -1,9 +1,9 @@
 [build]
 builder = "Dockerfile"
-buildCommand = "echo building!"
-[deploy]
-preDeployCommand = ["npm run db:migrate"]
-startCommand = "echo starting!"
-healthcheckPath = "/"
-healthcheckTimeout = 100
-restartPolicyType = "never"
+
+
+
+healthcheckPath = "/healthz/"
+healthcheckTimeout = 300
+restartPolicyType = "always"
+restartPolicyMaxRetries = 10
