@@ -202,7 +202,7 @@ STATIC_ROOT.mkdir(parents=True, exist_ok=True)
 # like custom css
 # unlocked files that change during dev
 STATICFILES_DIRS = [
-    BASE_DIR / "staticfiles"
+    BASE_DIR / "static"
 ]
 
 STORAGES = {
