@@ -13,5 +13,6 @@ dependencies = [
     "dj-database-url",
     "psycopg[binary]",
     "whitenoise",
-    
+    "django-polymorphic",
+    "Pillow",
 ]

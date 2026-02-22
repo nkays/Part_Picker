@@ -98,6 +98,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'commando',
+    'polymorphic',
+    'Parts',
 ]
 
 MIDDLEWARE = [
