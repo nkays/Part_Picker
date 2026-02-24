@@ -1,6 +1,7 @@
 local-cdn/
 
 src/static_root
+src/staticfiles/admin
 failed.py
 
 
