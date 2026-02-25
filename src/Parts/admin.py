@@ -5,6 +5,7 @@ from django import forms  # ← add this
 from polymorphic.admin import PolymorphicParentModelAdmin, PolymorphicChildModelAdmin
 from .models import Component, Frame, Motor, ESC, Battery  # add others later
 
+
 # Child admins first (optional but good for organization)
 
 @admin.register(Frame)
@@ -13,8 +14,8 @@ class FrameAdmin(PolymorphicChildModelAdmin):
 
     def get_form(self, request, obj=None, **kwargs):
         form = super().get_form(request, obj, **kwargs)
-        form.base_fields['motor_mounting_patterns'].widget = forms.CheckboxSelectMultiple(
-            choices=MountingPattern.choices
+        form.base_fields['motor_mounting'].widget = forms.CheckboxSelectMultiple(
+        choices=Frame.MountingPattern.choices  # ← Frame.MountingPattern works without importing the inner class
         )
         return form
 
