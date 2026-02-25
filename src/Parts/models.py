@@ -1,4 +1,5 @@
 # models.py
+from django import forms
 from django.db import models
 from polymorphic.models import PolymorphicModel
 from django.contrib.postgres.fields import ArrayField
@@ -19,9 +20,9 @@ class ChoiceArrayField(ArrayField):
             defaults = {
                 'form_class': forms.MultipleChoiceField,
                 'choices': self.base_field.choices,
-                'widget': forms.CheckboxselectMultiple,
+                'widget': forms.CheckboxSelectMultiple,
             }
-            defaults.upate(kwargs)
+            defaults.update(kwargs)
             return super().formfield(**defaults)
 
 

@@ -2,7 +2,6 @@
 # Parts/admin.py
 from django import forms
 from django.contrib import admin
-from django import forms  # ← add this
 from polymorphic.admin import PolymorphicParentModelAdmin, PolymorphicChildModelAdmin
 from .models import Component, Frame, Motor, ESC, Battery  # add others later
 
@@ -12,13 +11,8 @@ from .models import Component, Frame, Motor, ESC, Battery  # add others later
 @admin.register(Frame)
 class FrameAdmin(PolymorphicChildModelAdmin):
     base_model = Frame
-
-    # def get_form(self, request, obj=None, **kwargs):
-    #     form = super().get_form(request, obj, **kwargs)
-    #     form.base_fields['motor_mounting'].widget = forms.CheckboxSelectMultiple(
-    #     choices=Frame.MountingPattern.choices  # ← Frame.MountingPattern works without importing the inner class
-    #     )
-    #     return form
+    # No get_form override needed anymore — ChoiceArrayField handles checkboxes + pre-checks
+    # You can add list_display, search_fields, etc. here later if you want frame-specific columns
 
 @admin.register(Motor)
 class MotorAdmin(PolymorphicChildModelAdmin):
