@@ -16,14 +16,16 @@ class Component(PolymorphicModel):
 # Now the subclasses — same indentation level as Component
 
 class ChoiceArrayField(ArrayField):
-        def formfield(self, *args, **kwargs):
-            defaults = {
-                'form_class': forms.MultipleChoiceField,
-                'choices': self.base_field.choices,
-                'widget': forms.CheckboxSelectMultiple,
-            }
-            defaults.update(kwargs)
-            return super().formfield(**defaults)
+    def formfield(self, **kwargs):
+        defaults = {
+            'form_class': forms.MultipleChoiceField,
+            'choices': self.base_field.choices,
+            'widget': forms.CheckboxSelectMultiple,
+        }
+        # Pop any kwargs that MultipleChoiceField won't accept
+        kwargs.pop('base_field', None)  # just in case
+        defaults.update(kwargs)
+        return super(ArrayField, self).formfield(**defaults)
 
 
 class Frame(Component):
