@@ -4,7 +4,7 @@ from django.contrib import admin
 from django import forms  # ← add this
 from polymorphic.admin import PolymorphicParentModelAdmin, PolymorphicChildModelAdmin
 from .models import Component, Frame, Motor, ESC, Battery  # add others later
-
+from django import forms
 
 # Child admins first (optional but good for organization)
 
