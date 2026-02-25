@@ -48,13 +48,11 @@ class Frame(Component):
         mm9           = "9_mm",        "9 mm"
     
     
-    motor_mounting = ChoiceArrayField(           # ← indented under Frame
-        base_field=models.CharField(
-            max_length=20,
-            choices=MountingPattern.choices,     # ← works because MountingPattern is nested
-        ),
+    motor_mounting = ChoiceArrayField(
+        models.CharField(max_length=20, choices=MountingPattern.choices),
         blank=True,
         default=list,
+        size=None,                  # optional, but good to be explicit
     )
 
     Motor_Count     = models.IntegerField(default=4)
