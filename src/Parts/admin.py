@@ -12,12 +12,12 @@ from .models import Component, Frame, Motor, ESC, Battery  # add others later
 class FrameAdmin(PolymorphicChildModelAdmin):
     base_model = Frame
 
-    def get_form(self, request, obj=None, **kwargs):
-        form = super().get_form(request, obj, **kwargs)
-        form.base_fields['motor_mounting'].widget = forms.CheckboxSelectMultiple(
-        choices=Frame.MountingPattern.choices  # ← Frame.MountingPattern works without importing the inner class
-        )
-        return form
+    # def get_form(self, request, obj=None, **kwargs):
+    #     form = super().get_form(request, obj, **kwargs)
+    #     form.base_fields['motor_mounting'].widget = forms.CheckboxSelectMultiple(
+    #     choices=Frame.MountingPattern.choices  # ← Frame.MountingPattern works without importing the inner class
+    #     )
+    #     return form
 
 @admin.register(Motor)
 class MotorAdmin(PolymorphicChildModelAdmin):

@@ -14,6 +14,17 @@ class Component(PolymorphicModel):
 
 # Now the subclasses — same indentation level as Component
 
+class ChoiceArrayField(ArrayField):
+        def formfield(self, *args, **kwargs):
+            defaults = {
+                'form_class': forms.MultipleChoiceField,
+                'choices': self.base_field.choices,
+                'widget': forms.CheckboxselectMultiple,
+            }
+            defaults.upate(kwargs)
+            return super().formfield(**defaults)
+
+
 class Frame(Component):
     class FrameStyle(models.TextChoices):
         FREESTYLE   = "freestyle",   "Freestyle"
@@ -34,10 +45,12 @@ class Frame(Component):
         mm1619        = "16x19_mm", "16x19 mm"
         mm1212        = "12x12_mm", "12x12 mm"
         mm9           = "9_mm",        "9 mm"
-    motor_mounting = ArrayField(
+    
+    
+    motor_mounting = ChoiceArrayField(           # ← indented under Frame
         base_field=models.CharField(
             max_length=20,
-            choices=MountingPattern.choices,
+            choices=MountingPattern.choices,     # ← works because MountingPattern is nested
         ),
         blank=True,
         default=list,
