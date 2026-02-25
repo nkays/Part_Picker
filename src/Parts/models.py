@@ -1,6 +1,8 @@
 # models.py
 from django.db import models
 from polymorphic.models import PolymorphicModel
+from django.contrib.postgres.fields import ArrayField
+
 
 class Component(PolymorphicModel):
     name = models.CharField(max_length=200)
@@ -11,6 +13,45 @@ class Component(PolymorphicModel):
         return f"{self.name} ({self.get_real_instance_class().__name__})"  # or whatever you like
 
 # Now the subclasses — same indentation level as Component
+
+class Frame(Component):
+    class FrameStyle(models.TextChoices):
+        FREESTYLE   = "freestyle",   "Freestyle"
+        RACING      = "racing",      "Racing"
+        CINEWHOOP   = "cinewhoop",   "Cinewhoop"
+        LONG_RANGE  = "long_range",  "Long Range"
+        CINELIFTER  = "cinelifter",  "Cinelifter"
+        TOOTHPICK   = "toothpick",   "Toothpick"
+
+    frame_style = models.CharField(
+        max_length=20,
+        choices=FrameStyle.choices,
+        default=FrameStyle.FREESTYLE,
+    )
+    
+    class MountingPattern(models.TextChoices):
+        mm1616        = "16x16_mm", "16x16 mm"
+        mm1619        = "16x19_mm", "16x19 mm"
+        mm1212        = "12x12_mm", "12x12 mm"
+        mm9           = "9_mm",        "9 mm"
+    motor_mounting = ArrayField(
+        base_field=models.CharField(
+            max_length=20,
+            choices=MountingPattern.choices,
+        ),
+        blank=True,
+        default=list,
+    )
+
+    Motor_Count     = models.IntegerField(default=4)
+    Wheelbase       = models.IntegerField(default=6)
+    Prop_Size       = models.IntegerField(default=6)
+    dry_weight_g    = models.IntegerField(
+    verbose_name="Dry Weight",
+    help_text="in grams (g)",
+    db_comment="Frame weight without electronics, in grams",
+    )
+
 class Motor(Component):
     kv_rating = models.IntegerField()
     stator_size = models.CharField(max_length=50, blank=True)

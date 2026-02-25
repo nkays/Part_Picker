@@ -2,9 +2,21 @@
 # Parts/admin.py
 from django.contrib import admin
 from polymorphic.admin import PolymorphicParentModelAdmin, PolymorphicChildModelAdmin
-from .models import Component, Motor, ESC, Battery  # add others later
+from .models import Component, Frame, Motor, ESC, Battery  # add others later
 
 # Child admins first (optional but good for organization)
+
+@admin.register(Frame)
+class FrameAdmin(PolymorphicChildModelAdmin):
+    base_model = Frame
+
+    def get_form(self, request, obj=None, **kwargs):
+        form = super().get_form(request, obj, **kwargs)
+        form.base_fields['motor_mounting_patterns'].widget = forms.CheckboxSelectMultiple(
+            choices=MountingPattern.choices
+        )
+        return form
+
 @admin.register(Motor)
 class MotorAdmin(PolymorphicChildModelAdmin):
     base_model = Motor
@@ -23,7 +35,7 @@ class BatteryAdmin(PolymorphicChildModelAdmin):
 class ComponentAdmin(PolymorphicParentModelAdmin):
     base_model = Component
     
-    child_models = (Motor, ESC, Battery)  # ← just the model classes, no tuples or admins here!
+    child_models = (Frame, Motor, ESC, Battery)  # ← just the model classes, no tuples or admins here!
     
     list_display = ('name', 'brand', 'get_real_instance_class_name')
     search_fields = ('name', 'brand')
