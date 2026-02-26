@@ -41,19 +41,4 @@ class ComponentAdmin(PolymorphicParentModelAdmin):
         return obj.get_real_instance_class().__name__
     get_real_instance_class_name.short_description = 'Type'
 
-    # ────────────────────────────────────────────────
-    # This is the key part — customize the "Save" button
-    # only on the initial "pick type" add page
-    # ────────────────────────────────────────────────
-
-
-    def add_view(self, request, form_url='', extra_context=None):
-        extra_context = extra_context or {}
-        
-        # Change button text only for the very first step (when obj is None)
-        if not request.GET.get('ct'):  # no child type selected yet
-            extra_context['submit_label'] = 'Next'          # or 'Continue'
-            extra_context['show_save_and_continue'] = False  # optional: hide the other buttons if you want
-            extra_context['show_save_and_add_another'] = False
-        
-        return super().add_view(request, form_url, extra_context)
+    
