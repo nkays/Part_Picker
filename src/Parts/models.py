@@ -76,8 +76,14 @@ class ESC(Component):
     burst_current = models.IntegerField(blank=True, null=True)
     # protocol, etc.
 
+class FC(Component):
+    mounting = models.PositiveIntegerField(choices=[(16, '16x16 mm'), (20, '20x20 mm'), (25.5, '25.5x25.5 mm'), (30.5, '30.5x30.5 mm')])
+    cells = models.PositiveIntegerField(choices=[(3, '3S'), (4, '4S'), (6, '6S'), (8, '8S')])
+    weight_g = models.IntegerField()
+    # protocol, etc.
+
 class Battery(Component):
-    cells = models.PositiveIntegerField(choices=[(3, '3S'), (4, '4S'), (6, '6S')])
+    cells = models.PositiveIntegerField(choices=[(3, '3S'), (4, '4S'), (6, '6S'), (8, '8S')])
     capacity_mah = models.PositiveIntegerField()
     discharge_rate = models.CharField(max_length=50, blank=True)  # e.g., "120C"
 

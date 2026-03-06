@@ -3,7 +3,7 @@
 from django import forms
 from django.contrib import admin
 from polymorphic.admin import PolymorphicParentModelAdmin, PolymorphicChildModelAdmin
-from .models import Component, Frame, Motor, ESC, Battery  # add others later
+from .models import Component, Frame, Motor, ESC, FC, Battery  # add others later
 
 
 # Child admins first (optional but good for organization)
@@ -23,6 +23,10 @@ class MotorAdmin(PolymorphicChildModelAdmin):
 class ESCAdmin(PolymorphicChildModelAdmin):
     base_model = ESC
 
+@admin.register(FC)
+class FCAdmin(PolymorphicChildModelAdmin):
+    base_model = FC
+
 @admin.register(Battery)
 class BatteryAdmin(PolymorphicChildModelAdmin):
     base_model = Battery
@@ -32,7 +36,7 @@ class BatteryAdmin(PolymorphicChildModelAdmin):
 class ComponentAdmin(PolymorphicParentModelAdmin):
     base_model = Component
     
-    child_models = (Frame, Motor, ESC, Battery)  # ← just the model classes, no tuples or admins here!
+    child_models = (Frame, Motor, ESC, FC, Battery)  # ← just the model classes, no tuples or admins here!
     
     list_display = ('name', 'brand', 'get_real_instance_class_name')
     search_fields = ('name', 'brand')
