@@ -261,6 +261,7 @@ dependencies = [
     { name = "dj-database-url" },
     { name = "django" },
     { name = "django-polymorphic" },
+    { name = "django-summernote" },
     { name = "gunicorn" },
     { name = "jupyter" },
     { name = "pillow" },
@@ -275,6 +276,7 @@ requires-dist = [
     { name = "dj-database-url" },
     { name = "django", specifier = ">=5.2,<6.0" },
     { name = "django-polymorphic" },
+    { name = "django-summernote" },
     { name = "gunicorn", specifier = ">=25.1.0" },
     { name = "jupyter", specifier = ">=1.1.1" },
     { name = "pillow" },
@@ -375,6 +377,16 @@ sdist = { url = "https://files.pythonhosted.org/packages/7d/e2/53f669fe52284d3ef
 wheels = [
     { url = "https://files.pythonhosted.org/packages/41/ec/6d4e035dfda112383d3a7db2271e02f28a03597b88370fa785dc3850023d/django_polymorphic-4.11.1-py3-none-any.whl", hash = "sha256:8f9644bb86de722e6a7af0bf2b483bea7b95e0ac917aca264c3a48782c2c93a6", size = 79020, upload-time = "2026-02-20T19:46:53.306Z" },
 ]
+
+[[package]]
+name = "django-summernote"
+version = "0.8.20.0"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "bleach" },
+    { name = "django" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/0e/20/d184fd9566c263f474e2fe964fdbcf50f277746f2d3efb0881208abbb658/django-summernote-0.8.20.0.tar.gz", hash = "sha256:52e9b12438ed9eac0d77729f758f2aae06e468b5cbce133e24100d58ae4e43a8", size = 288500, upload-time = "2021-10-14T21:54:58.75Z" }
 
 [[package]]
 name = "executing"
