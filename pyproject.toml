@@ -16,4 +16,5 @@ dependencies = [
     "django-polymorphic",
     "Pillow",
     'django-summernote',
+    'django-import-export'
 ]

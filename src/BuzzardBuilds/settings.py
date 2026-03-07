@@ -100,6 +100,7 @@ INSTALLED_APPS = [
     'commando',
     'polymorphic',
     'Parts',
+    'import_export',
 ]
 
 MIDDLEWARE = [
