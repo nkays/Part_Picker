@@ -2,7 +2,10 @@
 
 from django import forms
 from django.contrib import admin
-from import_export import resources
+from import_export import resources, fields
+from import_export.widgets import Widget
+from .widget import CommaSeparatedListWidget
+from django.utils.text import slugify
 from import_export.admin import ImportExportModelAdmin
 from polymorphic.admin import (
     PolymorphicParentModelAdmin,
@@ -28,6 +31,13 @@ from .models import (
 # ────────────────────────────────────────────────
 
 class FrameResource(resources.ModelResource):
+
+    motor_mounting = fields.Field(
+        column_name="motor_mounting",
+        attribute="motor_mounting",
+        widget=CommaSeparatedListWidget()
+    )
+
     class Meta:
         model = Frame
         fields = (
@@ -37,18 +47,15 @@ class FrameResource(resources.ModelResource):
             'stack_height_mm', 'dry_weight_g',
             'affiliate_provider', 'affiliate_url', 'asin',
         )
+
         export_order = fields
+        skip_unchanged = True
+        report_skipped = True
+        import_id_fields = ('mpn',)
 
-    # Handle motor_mounting array → comma-separated string for CSV
-    def dehydrate_motor_mounting(self, obj):
-        return ','.join(obj.motor_mounting) if obj.motor_mounting else ''
-
-    # Optional: parse back on import if needed (usually ChoiceArrayField handles it)
-    def before_import_row(self, row, row_result, **kwargs):
-        if 'motor_mounting' in row and row['motor_mounting']:
-            row['motor_mounting'] = row['motor_mounting'].split(',')
-        return row
-
+    def before_import_row(self, row, **kwargs):
+        if 'slug' not in row or not row['slug']:
+            row['slug'] = slugify(row.get('id', 'name'))
 
 class MotorResource(resources.ModelResource):
     class Meta:

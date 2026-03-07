@@ -34,8 +34,8 @@ class Component(PolymorphicModel):
     name = models.CharField(max_length=200)
     slug = models.SlugField(max_length=250, unique=True, blank=True)  # auto-gen from name for URLs
     brand = models.CharField(max_length=100, blank=True)
-    mpn = models.CharField(max_length=100, blank=True, verbose_name="Manufacturer Part Number", unique=True, null=True)  # great for matching affiliates
-    image_url = models.URLField(blank=True)  # approved affiliate hotlink
+    mpn = models.CharField(max_length=100, blank=True, null=True, verbose_name="Manufacturer Part Number", unique=True)
+    image_url = models.URLField(blank=True, null=True)  # approved affiliate hotlink
     description = models.TextField(blank=True)
     weight_g = models.PositiveIntegerField(null=True, blank=True, verbose_name="Weight (g)")  # common across many
     created_at = models.DateTimeField(auto_now_add=True)
