@@ -4,6 +4,8 @@ from django import forms
 from django.contrib import admin
 from import_export import resources, fields
 from import_export.widgets import Widget
+
+from .import_utils import generate_row_slug
 from .widget import CommaSeparatedListWidget
 from django.utils.text import slugify
 from import_export.admin import ImportExportModelAdmin
@@ -52,10 +54,9 @@ class FrameResource(resources.ModelResource):
         skip_unchanged = True
         report_skipped = True
         import_id_fields = ('mpn',)
-
+    
     def before_import_row(self, row, **kwargs):
-        if 'slug' not in row or not row['slug']:
-            row['slug'] = slugify(row.get('id', 'name'))
+        row["slug"] = generate_row_slug(row)
 
 class MotorResource(resources.ModelResource):
     class Meta:

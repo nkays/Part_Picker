@@ -1,12 +1,18 @@
 # models.py
+import random
 from django import forms
 from django.db import models
+from django.db.models import Q
 from polymorphic.models import PolymorphicModel
 from django.contrib.postgres.fields import ArrayField
+from django.db.models.signals import pre_save, post_save
 # Your custom ChoiceArrayField from before...
 # Custom ArrayField that renders as checkboxes in forms/admin
 from django import forms
 from django.contrib.postgres.fields import ArrayField
+
+from .utils import generate_model_slug
+
 
 
 class ChoiceArrayField(ArrayField):
@@ -49,8 +55,20 @@ class Component(PolymorphicModel):
     def __str__(self):
         return f"{self.name} ({self.get_real_instance_class().__name__})"
 
+    
+    def save(self, *args, **kwargs):
+        self.slug = generate_model_slug(self, Component)
+        super().save(*args, **kwargs)
+
     class Meta:
         ordering = ['name']
+        constraints = [
+            models.UniqueConstraint(
+                fields=["brand", "name"],
+                name="unique_part",
+                condition=~models.Q(brand="")
+            )
+        ]
 
 # Frame (your existing + compatibility prep)
 class Frame(Component):
@@ -129,3 +147,8 @@ class Propeller(Component):
     material = models.CharField(max_length=50, blank=True, help_text="e.g. 'Polycarbonate'")
     weight_g_per_prop = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
     # Future compat: recommended for motor stator / KV
+
+# def product_pre_save_receiver(sender, instance, *args, **kwargs):
+#     if not instance.slug:
+#         instance.slug = unique_slug_generator(instance)
+# pre_save.connect(product_pre_save_receiver, sender=Component) 
