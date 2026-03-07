@@ -4,7 +4,8 @@ set -e
 cd /code
 
 uv run python manage.py migrate --noinput
-uv run python manage.py auto_admin --noinput
+uv run python manage.py auto_admin 
+
 
 RUNTIME_PORT=${PORT:-8080}
 RUNTIME_HOST=${HOST:-0.0.0.0} 
