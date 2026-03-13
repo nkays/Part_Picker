@@ -13,7 +13,14 @@ from django.contrib.postgres.fields import ArrayField
 
 from .utils import generate_model_slug
 
-
+FALLBACK_ICONS = {
+    'Frame': '/staticfiles/images/icons/frame.png',
+    'Motor': '/staticfiles/images/icons/Motor.png',
+    'ESC': '/staticfiles/images/icons/ESC.png',
+    'FC': '/staticfiles/images/icons/FC.png',
+    'Battery': '/staticfiles/images/icons/battery.png',
+    'Propeller': '/staticfiles/images/icons/prop.png',
+}
 
 class ChoiceArrayField(ArrayField):
     def formfield(self, **kwargs):
@@ -41,8 +48,12 @@ class Component(PolymorphicModel):
     slug = models.SlugField(max_length=250, unique=True, blank=True)  # auto-gen from name for URLs
     brand = models.CharField(max_length=100, blank=True)
     mpn = models.CharField(max_length=100, blank=True, null=True, verbose_name="Manufacturer Part Number", unique=True)
-    image_url = models.URLField(blank=True, null=True)  # approved affiliate hotlink
+    current_price = models.DecimalField(decimal_places=2, max_digits=20, null=True, blank=True)  # optional for now, expand later with PriceSnapshot model
+    affiliate_url = models.URLField(blank=True)  # optional for now, expand later with PriceSnapshot model
+    image_url = models.URLField(max_length=500, verbose_name="Affiliate Image URL", help_text="Direct link to the product image on the affiliate site", blank=True, null=True)  # approved affiliate hotlink
     description = models.TextField(blank=True)
+    featured = models.BooleanField(default=False)  # for homepage or special listings
+    active = models.BooleanField(default=True)  # for soft-deletion or discontinued parts
     weight_g = models.PositiveIntegerField(null=True, blank=True, verbose_name="Weight (g)")  # common across many
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -54,7 +65,26 @@ class Component(PolymorphicModel):
 
     def __str__(self):
         return f"{self.name} ({self.get_real_instance_class().__name__})"
+    
+    @property
+    def latest_price_snapshot(self):
+        return self.price_history.order_by('-captured_at').first()
 
+    @property
+    def display_image(self):
+        """
+        Returns the best available image URL:
+        1. Affiliate URL if present and non-empty
+        2. Category-specific cartoon silhouette fallback
+        3. Ultimate generic placeholder
+        """
+        if self.affiliate_image_url:
+            return self.affiliate_image_url
+
+        # Use the actual subclass name as key (works great with polymorphic)
+        fallback = FALLBACK_ICONS.get(self.__class__.__name__)
+        if fallback:
+            return fallback
     
     def save(self, *args, **kwargs):
         self.slug = generate_model_slug(self, Component)
@@ -147,6 +177,27 @@ class Propeller(Component):
     material = models.CharField(max_length=50, blank=True, help_text="e.g. 'Polycarbonate'")
     weight_g_per_prop = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
     # Future compat: recommended for motor stator / KV
+
+# Separate model, same indentation level as Component
+class PriceSnapshot(models.Model):
+    component = models.ForeignKey(
+        Component,
+        on_delete=models.CASCADE,
+        related_name='price_history'  # so you can do component.price_history.all()
+    )
+    price = models.DecimalField(max_digits=10, decimal_places=2)
+    captured_at = models.DateTimeField(auto_now_add=True)
+    source = models.CharField(max_length=100, blank=True)       # e.g. 'getfpv', 'manual', 'pyrodrone'
+    notes = models.TextField(blank=True)                        # optional: sale info, currency, etc.
+
+    class Meta:
+        ordering = ['-captured_at']                             # newest first
+        verbose_name = "Price Snapshot"
+        verbose_name_plural = "Price Snapshots"
+
+    def __str__(self):
+        return f"${self.price} for {self.component} on {self.captured_at.date()}"
+
 
 # def product_pre_save_receiver(sender, instance, *args, **kwargs):
 #     if not instance.slug:

@@ -6,6 +6,7 @@ import string
 
 from django.utils import timezone
 from django.utils.text import slugify
+from Parts.models import Component
 
 
 
