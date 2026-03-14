@@ -8,7 +8,7 @@ def PartListView(request):
     context = {
         'object_list': queryset
     }
-    return render(request, 'pages/part_list.html', context)  
+    return render(request, 'pages/tabled_list.html', context)  
 
 def PartDetailSlugView(request, id):
     return render(request, 'pages/part_detail.html', {'id': id})    

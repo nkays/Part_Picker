@@ -1,0 +1,22 @@
+            <tr>
+            <th scope="row">1</th>
+
+            <td height="50">
+                <a href="{{ instance.affiliate_url|default:'#' }}" target="_blank" rel="noopener noreferrer">
+                    <img 
+                        src="{{ instance.display_image }}" 
+                        alt="{{ instance.name }}"
+                        style="max-height:50px; width:auto;"
+                    >
+                </a>    
+            </td>
+            <td>{{ instance.name }}</td>
+            <td>{{ instance.brand }}</td>
+            <td>{{ instance.mpn }}</td>
+            <td>{{ instance.current_price }}</td>
+            
+          </tr>
+         
+        
+
+
