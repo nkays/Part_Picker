@@ -6,7 +6,7 @@ from django import forms
 from django.db import models
 from django.urls import reverse
 from django.contrib.postgres.fields import ArrayField
-
+from django.templatetags.static import static
 from polymorphic.models import PolymorphicModel
 from polymorphic.managers import PolymorphicManager, PolymorphicQuerySet
 
@@ -58,12 +58,12 @@ class ComponentManager(PolymorphicManager):
         return None
 
 FALLBACK_ICONS = {
-    'Frame': '/staticfiles/images/icons/frame.png',
-    'Motor': '/staticfiles/images/icons/Motor.png',
-    'ESC': '/staticfiles/images/icons/ESC.png',
-    'FC': '/staticfiles/images/icons/FC.png',
-    'Battery': '/staticfiles/images/icons/battery.png',
-    'Propeller': '/staticfiles/images/icons/prop.png',
+    'Frame': 'frame.png',
+    'Motor': 'Motor.png',
+    'ESC': 'ESC.png',
+    'FC': 'FC.png',
+    'Battery': 'battery.png',
+    'Propeller': 'prop.png',
 }
 
 class ChoiceArrayField(ArrayField):
@@ -131,16 +131,22 @@ class Component(TimeStampedModel, PolymorphicModel):
 
     @property
     def display_image(self):
+        """
+        Returns the best available image URL:
+        1. Affiliate URL if present and non-empty
+        2. Category-specific cartoon silhouette fallback using Django's static()
+        """
         if self.image_url:
             return self.image_url
-        if hasattr(self, 'image') and self.image:
-            return self.image.url
-        # subclass fallback
-        fallback = FALLBACK_ICONS.get(self.__class__.__name__)
-        if fallback:
-            return fallback
-        # ultimate generic
-        return "/static/default-product.png"
+
+        # Use the actual subclass name as key (works great with polymorphic)
+        fallback_filename = FALLBACK_ICONS.get(self.__class__.__name__)
+        if fallback_filename:
+            # Convert to proper static path
+            return static(f'images/icons/{fallback_filename}')
+
+        # Optional: could return a generic fallback
+        return static('images/icons/default.png')
     
     def save(self, *args, **kwargs):
         self.slug = generate_model_slug(self, Component)
