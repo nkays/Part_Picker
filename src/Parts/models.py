@@ -58,12 +58,12 @@ class ComponentManager(PolymorphicManager):
         return None
 
 FALLBACK_ICONS = {
-    'Frame': 'frame.png',
-    'Motor': 'Motor.png',
-    'ESC': 'ESC.png',
-    'FC': 'FC.png',
-    'Battery': 'battery.png',
-    'Propeller': 'prop.png',
+    'Frame': 'images/icons/frame.png',
+    'Motor': 'images/icons/Motor.png',
+    'ESC': 'images/icons/ESC.png',
+    'FC': 'images/icons/FC.png',
+    'Battery': 'images/icons/battery.png',
+    'Propeller': 'images/icons/prop.png',
 }
 
 class ChoiceArrayField(ArrayField):
@@ -133,20 +133,17 @@ class Component(TimeStampedModel, PolymorphicModel):
     def display_image(self):
         """
         Returns the best available image URL:
-        1. Affiliate URL if present and non-empty
-        2. Category-specific cartoon silhouette fallback using Django's static()
+        1. Affiliate URL if present
+        2. Category-specific fallback using Django static
         """
         if self.image_url:
             return self.image_url
 
-        # Use the actual subclass name as key (works great with polymorphic)
-        fallback_filename = FALLBACK_ICONS.get(self.__class__.__name__)
-        if fallback_filename:
-            # Convert to proper static path
-            return static(f'images/icons/{fallback_filename}')
+        fallback_path = FALLBACK_ICONS.get(self.__class__.__name__)
+        if fallback_path:
+            return static(fallback_path)
 
-        # Optional: could return a generic fallback
-        return static('images/icons/default.png')
+        return ''  # optional ultimate generic
     
     def save(self, *args, **kwargs):
         self.slug = generate_model_slug(self, Component)
