@@ -1,17 +1,61 @@
 # models.py
+import os
 import random
+
 from django import forms
 from django.db import models
-from django.db.models import Q
-from polymorphic.models import PolymorphicModel
-from django.contrib.postgres.fields import ArrayField
-from django.db.models.signals import pre_save, post_save
-# Your custom ChoiceArrayField from before...
-# Custom ArrayField that renders as checkboxes in forms/admin
-from django import forms
+from django.urls import reverse
 from django.contrib.postgres.fields import ArrayField
 
-from .utils import generate_model_slug
+from polymorphic.models import PolymorphicModel
+from polymorphic.managers import PolymorphicManager, PolymorphicQuerySet
+
+from .utils import generate_model_slug, unique_slug_generator
+
+import uuid
+
+def upload_image_path(instance, filename):
+    ext = filename.split('.')[-1]
+    filename = f"{uuid.uuid4()}.{ext}"
+    return f"Parts/{filename}"
+
+
+def get_filename_ext(filepath):
+    base_name = os.path.basename(filepath)
+    name, ext = os.path.splitext(base_name)
+    return name, ext
+
+class TimeStampedModel(models.Model):
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        abstract = True
+
+class ComponentQuerySet(PolymorphicQuerySet):
+
+    def active(self):
+        return self.filter(active=True)
+
+    def featured(self):
+        return self.filter(featured=True, active=True)
+
+class ComponentManager(PolymorphicManager):
+    def get_queryset(self):
+        return ComponentQuerySet(self.model, using=self._db).filter(active=True)
+
+    def active(self):
+        return self.get_queryset().active()
+    
+    def featured(self):
+        return self.get_queryset().featured()
+    
+
+    def get_by_id(self, id):
+        qs = self.get_queryset().filter(id=id) # Component.objects == self.get_queryset()
+        if qs.count() == 1:
+            return qs.first()
+        return None
 
 FALLBACK_ICONS = {
     'Frame': '/staticfiles/images/icons/frame.png',
@@ -23,16 +67,23 @@ FALLBACK_ICONS = {
 }
 
 class ChoiceArrayField(ArrayField):
+    """
+    ArrayField rendered as checkboxes in forms/admin.
+    Compatible with Django 5+.
+    """
+
     def formfield(self, **kwargs):
         defaults = {
-            'form_class': forms.MultipleChoiceField,
-            'choices': self.base_field.choices,
-            'widget': forms.CheckboxSelectMultiple,
+            "required": not self.blank,
+            "label": self.verbose_name,
+            "help_text": self.help_text,
+            "choices": self.base_field.choices,
+            "widget": forms.CheckboxSelectMultiple,
         }
-        # Pop any kwargs that MultipleChoiceField won't accept
-        kwargs.pop('base_field', None)  # just in case
+
         defaults.update(kwargs)
-        return super(ArrayField, self).formfield(**defaults)
+
+        return forms.MultipleChoiceField(**defaults)
 
 
 # Mounting pattern choices (pulled from your original code – define this before using it)
@@ -43,10 +94,10 @@ class MountingPattern(models.TextChoices):
     mm9      = "9_mm",       "9 mm"
     # Add more patterns as needed, e.g. mm20x20 = "20x20_mm", "20x20 mm"
 
-class Component(PolymorphicModel):
-    name = models.CharField(max_length=200)
-    slug = models.SlugField(max_length=250, unique=True, blank=True)  # auto-gen from name for URLs
-    brand = models.CharField(max_length=100, blank=True)
+class Component(TimeStampedModel, PolymorphicModel):
+    name = models.CharField(max_length=200, db_index=True)
+    slug = models.SlugField(max_length=250, unique=True, blank=True, db_index=True)  # auto-gen from name for URLs
+    brand = models.CharField(max_length=100, blank=True, db_index=True )
     mpn = models.CharField(max_length=100, blank=True, null=True, verbose_name="Manufacturer Part Number", unique=True)
     current_price = models.DecimalField(decimal_places=2, max_digits=20, null=True, blank=True)  # optional for now, expand later with PriceSnapshot model
     affiliate_url = models.URLField(blank=True)  # optional for now, expand later with PriceSnapshot model
@@ -55,13 +106,21 @@ class Component(PolymorphicModel):
     featured = models.BooleanField(default=False)  # for homepage or special listings
     active = models.BooleanField(default=True)  # for soft-deletion or discontinued parts
     weight_g = models.PositiveIntegerField(null=True, blank=True, verbose_name="Weight (g)")  # common across many
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
 
     # Affiliate basics (expand later with PriceSnapshot model)
     affiliate_provider = models.CharField(max_length=50, blank=True)  # 'amazon', 'getfpv', 'banggood'
-    affiliate_url = models.URLField(blank=True)
     asin = models.CharField(max_length=10, blank=True)  # Amazon-specific
+
+
+    objects = ComponentManager()
+    all_objects = PolymorphicManager()
+
+    def get_absolute_url(self):
+        #return "/Parts/{slug}/".format(slug=self.slug)
+        return reverse("Parts:detail", kwargs={"slug": self.slug})
+
+
+ 
 
     def __str__(self):
         return f"{self.name} ({self.get_real_instance_class().__name__})"
@@ -78,8 +137,8 @@ class Component(PolymorphicModel):
         2. Category-specific cartoon silhouette fallback
         3. Ultimate generic placeholder
         """
-        if self.affiliate_image_url:
-            return self.affiliate_image_url
+        if self.image_url:
+            return self.image_url
 
         # Use the actual subclass name as key (works great with polymorphic)
         fallback = FALLBACK_ICONS.get(self.__class__.__name__)
@@ -92,6 +151,8 @@ class Component(PolymorphicModel):
 
     class Meta:
         ordering = ['name']
+        verbose_name = "Component"
+        verbose_name_plural = "Components"
         constraints = [
             models.UniqueConstraint(
                 fields=["brand", "name"],
@@ -199,7 +260,3 @@ class PriceSnapshot(models.Model):
         return f"${self.price} for {self.component} on {self.captured_at.date()}"
 
 
-# def product_pre_save_receiver(sender, instance, *args, **kwargs):
-#     if not instance.slug:
-#         instance.slug = unique_slug_generator(instance)
-# pre_save.connect(product_pre_save_receiver, sender=Component) 
