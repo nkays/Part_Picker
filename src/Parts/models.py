@@ -131,19 +131,16 @@ class Component(TimeStampedModel, PolymorphicModel):
 
     @property
     def display_image(self):
-        """
-        Returns the best available image URL:
-        1. Affiliate URL if present and non-empty
-        2. Category-specific cartoon silhouette fallback
-        3. Ultimate generic placeholder
-        """
         if self.image_url:
             return self.image_url
-
-        # Use the actual subclass name as key (works great with polymorphic)
+        if hasattr(self, 'image') and self.image:
+            return self.image.url
+        # subclass fallback
         fallback = FALLBACK_ICONS.get(self.__class__.__name__)
         if fallback:
             return fallback
+        # ultimate generic
+        return "/static/default-product.png"
     
     def save(self, *args, **kwargs):
         self.slug = generate_model_slug(self, Component)

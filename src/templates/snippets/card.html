@@ -1,0 +1,33 @@
+<div class="card" style="width: 20rem;">
+    <!-- Link to affiliate URL or # if none -->
+    <a href="{{ instance.affiliate_url|default:'#' }}" target="_blank" rel="noopener noreferrer">
+        <!-- Display image with fallback -->
+        <img class="card-img-top" src="{{ instance.display_image }}" alt="{{ instance.name }}">
+    </a>
+    
+
+    <div class="card-body">
+        <!-- Title -->
+        <h4 class="card-title">{{ instance.name }}</h4>
+
+        <!-- Truncated description -->
+        <p class="card-text">
+            {{ instance.description|linebreaks|truncatewords:14 }}
+        </p>
+
+        <!-- Optional Price Display -->
+        {% if instance.latest_price_snapshot %}
+        <p class="text-center fw-bold">${{ instance.latest_price_snapshot.price }}</p>
+        {% endif %}
+
+        <!-- Action buttons -->
+        <div class="text-center">
+            <a href="#" class="btn btn-primary my-2">View Details</a>
+            {% if instance.affiliate_url %}
+            <a href="{{ instance.affiliate_url }}" class="btn btn-success my-2" target="_blank" rel="noopener noreferrer">
+                Buy / Affiliate Link
+            </a>
+            {% endif %}
+        </div>
+    </div>
+</div>
