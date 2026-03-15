@@ -1,6 +1,5 @@
             <tr>
-            <th scope="row">1</th>
-
+            <td>{{ counter }}</td>
             <td height="50">
                 <a href="{{ instance.affiliate_url|default:'#' }}" target="_blank" rel="noopener noreferrer">
                     <img 
@@ -10,6 +9,7 @@
                     >
                 </a>    
             </td>
+            
             <td>{{ instance.name }}</td>
             <td>{{ instance.brand }}</td>
             <td>{{ instance.mpn }}</td>
